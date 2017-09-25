@@ -5,7 +5,7 @@ import twitterAPI
 import re
 import time
 START = "START"
-END = "END"
+END = "EOS"
 
 
 class MarkcvChain:
@@ -33,9 +33,9 @@ class MarkcvChain:
         for index, word in enumerate(self.wordlist):
             if len(word) == 0:
                 return self.ngram
-            if index == 0 and word != 'EOS':
+            if index == 0 and word != END:
                 self.ngram[START].append(word)
-            elif "EOS" in word:
+            elif END in word:
                 return self.ngram
             if word in self.ngram:
                 self.ngram[word].append(self.wordlist[index + 1])
@@ -45,7 +45,7 @@ class MarkcvChain:
     def makeSentence(self) -> str:
         scentencelist = []
         scentencelist.append(random.choice(self.ngram[START]))
-        while scentencelist[len(scentencelist)-1] != :
+        while scentencelist[len(scentencelist)-1] != END:
             scentencelist.append(random.choice(self.ngram[scentencelist[len(scentencelist)-1]]))
         scentencelist.pop()
         scentence = "".join(scentencelist)
