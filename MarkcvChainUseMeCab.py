@@ -1,9 +1,8 @@
 import MeCab
 import pickle
 import random
-import twitterAPI
+import yahooparse
 import re
-import time
 START = "START"
 END = "EOS"
 
@@ -12,7 +11,7 @@ class MarkcvChain:
     def __init__(self):
         self.ngram = {START: []}
 
-    def makeMarkcvChain(self, scentence: str):
+    def makeMarkcvChainUseMeCab(self, scentence: str):
         """
 
         :type scentence: str
@@ -20,6 +19,12 @@ class MarkcvChain:
         t = MeCab.Tagger()
         self.textdata = t.parse(scentence)
         self.wordlist = self.parseText()
+        self.makengram()
+
+    def makeMarkcvChainUseYahoo(self, appid: str, scentence: str):
+        yahoo = yahooparse.YahooParse(appid)
+        self.wordlist = yahoo.parse(scentence)
+        self.wordlist.append(END)
         self.makengram()
 
     def getNgram(self):
@@ -58,29 +63,13 @@ class MarkcvChain:
     def reloadNgram(self, filename):
         with open(filename, mode='rb') as f:
             pickle.load(f, self.ngramdata)
-
-def clearText(text: str)-> str:
-    text = re.sub(r'https?://[\w/:%#\$&\?\(\)~\.=\+\-…]+', "", text)
-    text = re.sub(r'http?://[\w/:%#\$&\?\(\)~\.=\+\-…]+', "", text)
-    text = re.sub(r'@[a-z,A-Z,0-9]+', "", text)
-    text = re.sub(r'#[a-z,A-Z,0-9]+', "", text)
-    text = re.sub(r'RT', "", text)
-    text = re.sub(r':', '', text)
-    text = text.strip()
-    return text
-
-def main():
-    twitter = twitterAPI.Twitter()
-    # nozotweet = twitter.getUseTimeLine('keraunos_orz')
-    nozotweet = twitter.getTimeLine()
-    data = MarkcvChain()
-    for text in nozotweet:
-        text = clearText(text)
-        data.makeMarkcvChain(text)
-    twitter.tweetUpdate(data.makeSentence())
-
-
-if __name__ == "__main__":
-    while True:
-        main()
-        time.sleep(60*10)
+    
+    def clearText(text: str)-> str:
+        text = re.sub(r'https?://[\w/:%#\$&\?\(\)~\.=\+\-…]+', "", text)
+        text = re.sub(r'http?://[\w/:%#\$&\?\(\)~\.=\+\-…]+', "", text)
+        text = re.sub(r'@[a-z,A-Z,0-9]+', "", text)
+        text = re.sub(r'#[a-z,A-Z,0-9]+', "", text)
+        text = re.sub(r'RT', "", text)
+        text = re.sub(r':', '', text)
+        text = text.strip()
+        return text
