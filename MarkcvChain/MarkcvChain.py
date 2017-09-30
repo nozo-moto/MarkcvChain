@@ -1,4 +1,3 @@
-import MeCab
 import pickle
 import random
 import yahooparse
