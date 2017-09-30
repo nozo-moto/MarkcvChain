@@ -1,6 +1,6 @@
 # coding: utf-8
 from setuptools import setup, find_packages
-from pip_github_test import __author__, __version__, __license__
+from MarkcvChain import __author__, __version__, __license__
  
 setup(
         name             = 'MarcvChain',
