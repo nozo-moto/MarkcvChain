@@ -15,6 +15,7 @@ class MarkcvChain:
 
         :type scentence: str
         """
+        import MeCab
         t = MeCab.Tagger()
         self.textdata = t.parse(scentence)
         self.wordlist = self.parseText()
