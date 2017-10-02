@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 from MarkcvChain import __author__, __version__, __license__
  
 setup(
-        name             = 'MarcvChain',
+        name             = 'MarkcvChain',
         version          = __version__,
         description      = 'Yahooの形態素解析とマルコフ連鎖を使用して、文章の自動生成をするライブラリ',
         license          = __license__,
