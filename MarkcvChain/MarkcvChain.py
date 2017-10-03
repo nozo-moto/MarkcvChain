@@ -1,6 +1,6 @@
 import pickle
 import random
-import yahooparse
+from . import yahooparse
 import re
 START = "START"
 END = "EOS"
