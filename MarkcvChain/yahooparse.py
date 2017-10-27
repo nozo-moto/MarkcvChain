@@ -21,7 +21,7 @@ class YahooParse:
 
     def parseXML(self, text: str) -> list:
         root = ET.fromstring(text)
-        result = [child[1].text for child in root[0][2]]
+        result = [child[1].text for child in root[1][2]]
         return result
 
     def parse(self, text: str) -> list:

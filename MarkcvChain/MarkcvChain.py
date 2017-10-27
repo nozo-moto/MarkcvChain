@@ -1,10 +1,9 @@
 import pickle
 import random
-from . import yahooparse
 import re
 START = "START"
 END = "EOS"
-
+from yahooparse import YahooParse
 
 class MarkcvChain:
     def __init__(self):
@@ -22,7 +21,8 @@ class MarkcvChain:
         self.makengram()
 
     def makeMarkcvChainUseYahoo(self, appid: str, scentence: str):
-        yahoo = yahooparse.YahooParse(appid)
+
+        yahoo = YahooParse(appid)
         self.wordlist = yahoo.parse(scentence)
         self.wordlist.append(END)
         self.makengram()
@@ -31,7 +31,7 @@ class MarkcvChain:
         return self.ngram
 
     def parseText(self) -> list:
-        word = [i.split("\t")[0] for i in self.textdata.split("\n")]
+        word = [i.split("\t")[0] for i in self.textdata.split("。",)]
         return word
 
     def makengram(self) -> dict:
@@ -63,7 +63,7 @@ class MarkcvChain:
     def reloadNgram(self, filename):
         with open(filename, mode='rb') as f:
             pickle.load(f, self.ngramdata)
-    
+
     def clearText(text: str)-> str:
         text = re.sub(r'https?://[\w/:%#\$&\?\(\)~\.=\+\-…]+', "", text)
         text = re.sub(r'http?://[\w/:%#\$&\?\(\)~\.=\+\-…]+', "", text)
@@ -73,3 +73,28 @@ class MarkcvChain:
         text = re.sub(r':', '', text)
         text = text.strip()
         return text
+
+
+if __name__ == '__main__':
+    mr = MarkcvChain()
+    texts = [
+        "昨日、近所の吉野家行ったんです。吉野家。",
+        "そしたらなんか人がめちゃくちゃいっぱいで座れないんです。"
+        "で、よく見たらなんか垂れ幕下がってて、１５０円引き、とか書いてあるんです。",
+        "もうね、アホかと。馬鹿かと。",
+        "お前らな、１５０円引き如きで普段来てない吉野家に来てんじゃねーよ、ボケが。",
+        "１５０円だよ、１５０円。",
+        "なんか親子連れとかもいるし。一家４人で吉野家か。おめでてーな。",
+        "よーしパパ特盛頼んじゃうぞー、とか言ってるの。もう見てらんない。",
+        "お前らな、１５０円やるからその席空けろと。",
+        "吉野家ってのはな、もっと殺伐としてるべきなんだよ。",
+        "Ｕの字テーブルの向かいに座った奴といつ喧嘩が始まってもおかしくない、",
+        "刺すか刺されるか、そんな雰囲気がいいんじゃねーか。 d女子供は、すっこんでろ。",
+        "で、やっと座れたかと思ったら、隣の奴が、大盛つゆだくで、とか言ってるんです。",
+        "そこでまたぶち切れですよ。"
+    ]
+    for text in texts:
+        # mr.makeMarkcvChainUseYahoo("APIKEY-", text)
+        mr.makeMarkcvChainUseMeCab(text)
+    print(mr.getNgram())
+    print(mr.makeSentence())
