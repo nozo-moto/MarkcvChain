@@ -3,7 +3,7 @@ import random
 import re
 START = "START"
 END = "EOS"
-from yahooparse import YahooParse
+
 
 class MarkcvChain:
     def __init__(self):
@@ -21,7 +21,7 @@ class MarkcvChain:
         self.makengram()
 
     def makeMarkcvChainUseYahoo(self, appid: str, scentence: str):
-
+        from yahooparse import YahooParse
         yahoo = YahooParse(appid)
         self.wordlist = yahoo.parse(scentence)
         self.wordlist.append(END)
